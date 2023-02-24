@@ -3,8 +3,7 @@
 #ifndef NULL
 #define NULL 0
 #endif
-#include <iostream>
-using namespace std;
+
 
 /**
  * Node struct for both problems
@@ -89,9 +88,13 @@ Node* llfilter(Node* head, Comp pred)
 		return head;
 	}else{
 		if(pred(head->val)== false){
+            
             head->next = llfilter(head->next, pred);
+            
         }else{
+            Node* temp = head;
             head = llfilter(head->next, pred);
+            delete temp;
         }
         return head;
     }
