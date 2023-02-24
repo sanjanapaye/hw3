@@ -1,7 +1,12 @@
 #ifndef HEAP_H
 #define HEAP_H
 #include <functional>
+#include <algorithm>
 #include <stdexcept>
+#include <vector>
+#include <iostream>
+
+using namespace std;
 
 template <typename T, typename PComparator = std::less<T> >
 class Heap
@@ -61,6 +66,9 @@ public:
 
 private:
   /// Add whatever helper functions and data members you need below
+  std::vector<T> data;
+  int m;
+  PComparator c;
 
 
 
@@ -69,6 +77,43 @@ private:
 
 // Add implementation of member functions here
 
+template <typename T, typename PComparator >
+Heap<T, PComparator>::Heap(int m, PComparator c){
+
+}
+
+template <typename T, typename PComparator>
+Heap<T, PComparator>::~Heap(){
+  
+}
+
+
+template <typename T, typename PComparator >
+bool Heap<T, PComparator>::empty() const{
+	return data.empty();
+}
+
+template <typename T, typename PComparator>
+size_t Heap<T, PComparator>::size() const{
+	return data.size();
+}
+
+template <typename T, typename PComparator>
+void Heap<T, PComparator>::push(const T& item){
+  data.push_back(item);
+  //cout <<item<< endl;
+  std::size_t index = data.size() - 1;
+  while (index != 0) {
+    std::size_t parent_index = (index - 1)/m ;
+    T& current = data[index];
+    T& parent = data[parent_index];
+        if (c(parent, current)) {
+            break;
+        }
+        std::swap(current, parent);
+        index = parent_index;
+    }
+}
 
 // We will start top() for you to handle the case of 
 // calling top on an empty heap
@@ -81,13 +126,13 @@ T const & Heap<T,PComparator>::top() const
     // ================================
     // throw the appropriate exception
     // ================================
-
+    throw std::underflow_error("heap is empty");
 
   }
   // If we get here we know the heap has at least 1 item
   // Add code to return the top element
-
-
+  return data[0];
+	 
 
 }
 
@@ -101,12 +146,29 @@ void Heap<T,PComparator>::pop()
     // ================================
     // throw the appropriate exception
     // ================================
-
+    throw std::underflow_error("heap is empty");
 
   }
-
-
-
+  cout<< data[0]<<endl;
+  std::swap(data[0], data[data.size() - 1]);
+	  data.pop_back();
+    // TO BE COMPLETETED
+    std::size_t index = 0;
+    bool done = false;
+    while (done == false) {
+        std::size_t largest = index;
+        for (size_t i = m*index+1; (i <= m*index+m) && i<data.size(); ++i){
+          if(c(data[i], data[largest])){
+            largest = i;
+          }
+        }
+        if (largest != index) {
+            std::swap(data[index], data[largest]);
+            index = largest;
+        }else {
+            done = true;
+        }
+    }
 }
 
 
